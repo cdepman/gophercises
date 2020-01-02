@@ -8,20 +8,33 @@ import (
 	"strconv"
 )
 
+const QuestionsCSVPath = "./problems.csv"
+
+type Score struct {
+	Right int
+	Wrong int
+}
+
 type QuestionAndAnswer struct {
 	Question string
 	Answer   int
 }
 
 func main() {
-	readCSV("./problems.csv")
+	// score := Score{}
+	list := getQuestionAndAnswerList(QuestionsCSVPath)
+	for _, questionAndAnswer := range list {
+		fmt.Printf("What is %s?\n", questionAndAnswer.Question)
+	}
 }
 
-func readCSV(filePath string) {
+func getQuestionAndAnswerList(filePath string) []QuestionAndAnswer {
 	file, err := os.Open(filePath)
+	questionsAndAnswersList := []QuestionAndAnswer{}
+
 	if err != nil {
 		fmt.Printf("Error reading file %v", err)
-		return
+		return questionsAndAnswersList
 	}
 	defer file.Close()
 
@@ -30,14 +43,13 @@ func readCSV(filePath string) {
 		row, err := csvReader.Read()
 		if err == io.EOF {
 			fmt.Println("End of quiz!")
-			return
+			return questionsAndAnswersList
 		}
 		questionString := row[0]
 		answerString := row[1]
 		answerInt, err := strconv.Atoi(answerString)
 
 		nextQuestionAndAnswer := QuestionAndAnswer{Question: questionString, Answer: answerInt}
-		fmt.Printf("question: %s, answer: %d \n", nextQuestionAndAnswer.Question, nextQuestionAndAnswer.Answer)
+		questionsAndAnswersList = append(questionsAndAnswersList, nextQuestionAndAnswer)
 	}
-
 }
