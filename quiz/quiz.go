@@ -3,16 +3,18 @@ package main
 import (
 	"encoding/csv"
 	"fmt"
+	"io"
 	"os"
+	"strconv"
 )
 
 type QuestionAndAnswer struct {
-	question string
-	answer   int
+	Question string
+	Answer   int
 }
 
 func main() {
-
+	readCSV("./problems.csv")
 }
 
 func readCSV(filePath string) {
@@ -26,11 +28,16 @@ func readCSV(filePath string) {
 	csvReader := csv.NewReader(file)
 	for {
 		row, err := csvReader.Read()
-
-		if err != nil {
-			fmt.Printf("Error reading CSV lines from file %v", err)
+		if err == io.EOF {
+			fmt.Println("End of quiz!")
 			return
 		}
+		questionString := row[0]
+		answerString := row[1]
+		answerInt, err := strconv.Atoi(answerString)
+
+		nextQuestionAndAnswer := QuestionAndAnswer{Question: questionString, Answer: answerInt}
+		fmt.Printf("question: %s, answer: %d \n", nextQuestionAndAnswer.Question, nextQuestionAndAnswer.Answer)
 	}
 
 }
