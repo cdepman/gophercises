@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"encoding/csv"
 	"fmt"
 	"io"
 	"os"
 	"strconv"
+	"strings"
 )
 
 const QuestionsCSVPath = "./problems.csv"
@@ -21,11 +23,24 @@ type QuestionAndAnswer struct {
 }
 
 func main() {
-	// score := Score{}
+	inputReader := bufio.NewReader(os.Stdin)
+	score := Score{}
 	list := getQuestionAndAnswerList(QuestionsCSVPath)
 	for _, questionAndAnswer := range list {
-		fmt.Printf("What is %s?\n", questionAndAnswer.Question)
+		fmt.Printf("What is %s?\n> ", questionAndAnswer.Question)
+		answer, _ := inputReader.ReadString('\n')
+		answer = strings.TrimSuffix(answer, "\n")
+		answerInt, err := strconv.Atoi(answer)
+		if err != nil {
+			fmt.Printf("That's not an integer :(, %s", err)
+		}
+		if answerInt == questionAndAnswer.Answer {
+			score.Right += 1
+		} else {
+			score.Wrong += 1
+		}
 	}
+	fmt.Printf("Correct: %d\nIncorrrect: %d\n", score.Right, score.Wrong)
 }
 
 func getQuestionAndAnswerList(filePath string) []QuestionAndAnswer {
