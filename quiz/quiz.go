@@ -1,10 +1,15 @@
 package main
 
-import "os"
+import (
+	"encoding/csv"
+	"fmt"
+	"os"
+)
 
-import "fmt"
-
-import "encoding/csv"
+type QuestionAndAnswer struct {
+	question string
+	answer   int
+}
 
 func main() {
 
@@ -18,6 +23,14 @@ func readCSV(filePath string) {
 	}
 	defer file.Close()
 
-	reader := csv.NewReader(file).ReadAll()
+	csvReader := csv.NewReader(file)
+	for {
+		row, err := csvReader.Read()
+
+		if err != nil {
+			fmt.Printf("Error reading CSV lines from file %v", err)
+			return
+		}
+	}
 
 }
