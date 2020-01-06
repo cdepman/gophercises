@@ -13,8 +13,8 @@ import (
 const QuestionsCSVPath = "./problems.csv"
 
 type Score struct {
-	Right int
-	Wrong int
+	Correct    int
+	Incorrrect int
 }
 
 type QuestionAndAnswer struct {
@@ -35,12 +35,12 @@ func main() {
 			fmt.Printf("That's not an integer :(, %s", err)
 		}
 		if answerInt == questionAndAnswer.Answer {
-			score.Right += 1
+			score.Correct += 1
 		} else {
-			score.Wrong += 1
+			score.Incorrrect += 1
 		}
 	}
-	fmt.Printf("Correct: %d\nIncorrrect: %d\n", score.Right, score.Wrong)
+	fmt.Printf("Correct: %d\nIncorrrect: %d\n", score.Correct, score.Incorrrect)
 }
 
 func getQuestionAndAnswerList(filePath string) []QuestionAndAnswer {
